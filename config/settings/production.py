@@ -1,1 +1,3 @@
-ECHO is on.
+from .base import *
+
+ALLOWED_HOSTS = []
