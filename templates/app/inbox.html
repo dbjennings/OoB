@@ -1,0 +1,10 @@
+{% extends 'app/base.html' %}
+
+{% block content %}
+{% for task in tasks %}
+    <h2>{{task}}</h2>
+    {% for tag in task.tags.all %}
+        <p>{{tag}}</p>
+    {% endfor %}
+{% endfor %}
+{% endblock content %}

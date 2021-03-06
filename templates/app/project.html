@@ -1,0 +1,23 @@
+{% extends 'app/base.html' %}
+
+{% block content %}
+
+<h1>Project {{project.id}}</h1>
+<h2>Tasks with No Section</h2>
+{% for task in project.task_set.all %}
+    <h3>{{task}}</h3>
+    {% for tag in task.tags.all %}
+        <p>tag</p>
+    {% endfor %}
+{% endfor %}
+<br>
+{% for section in project.section_set.all  %}
+    <h2>{{section}}</h2>
+    {% for task in section.task_set.all %}
+        <h3>{{task}}</h3>
+        {% for tag in task.tags.all %}
+            <p>{{tag}}</p>
+        {% endfor %}
+    {% endfor %}
+{% endfor %}
+{% endblock content %}
