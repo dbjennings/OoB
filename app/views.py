@@ -1,5 +1,27 @@
-from django.shortcuts import render
+from django.shortcuts import redirect, render
+from django.contrib.auth import authenticate, login
 from django.views.generic import TemplateView
+from django.http import HttpRequest
+from django.contrib.auth.forms import UserCreationForm
+
+def register_user(request: HttpRequest):
+    # Checks to see if a user is already logged in
+    # !!! Change this functionality into a decorator
+    if request.user.is_authenticated:
+        return redirect('home')
+
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password1')
+            user = authenticate(username=username,password=password)
+            login(request, user)
+            return redirect('home')
+    else:
+        form = UserCreationForm
+        return render(request, 'app/register.html', {'form':form})
 
 class HomeView(TemplateView):
     template_name = 'app/home.html'
