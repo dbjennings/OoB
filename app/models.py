@@ -8,6 +8,7 @@ from .managers import OobUserManager
 
 class OobUser(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(_('email address'), unique=True)
+    name = models.CharField(_('first name'), max_length=100)
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
@@ -18,11 +19,13 @@ class OobUser(AbstractBaseUser, PermissionsMixin):
 
     objects = OobUserManager()
     
-
     class Meta:
         verbose_name = _('user')
         verbose_name_plural = _('users')
     
+    @property
+    def first_name(self):
+        return self.name.split(' ')[0]
 
     def __str__(self):
         return self.email

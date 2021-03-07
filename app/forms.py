@@ -1,13 +1,15 @@
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django import forms
+from django.forms import models
 
 from .models import OobUser, Task, Tag
 
 class OobUserCreationForm(UserCreationForm):
+    name = forms.CharField(max_length=100)
 
     class Meta(UserCreationForm.Meta):
         model = OobUser
-        fields = ('email',)
+        fields = ('email','name',)
 
 
 class OobUserChangeForm(UserChangeForm):
