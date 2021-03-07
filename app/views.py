@@ -2,7 +2,8 @@ from django.shortcuts import redirect, render
 from django.contrib.auth import authenticate, login
 from django.views.generic import TemplateView
 from django.http import HttpRequest
-from django.contrib.auth.forms import UserCreationForm
+
+from .forms import OobUserCreationForm
 
 def register_user(request: HttpRequest):
     # Checks to see if a user is already logged in
@@ -11,16 +12,16 @@ def register_user(request: HttpRequest):
         return redirect('home')
 
     if request.method == 'POST':
-        form = UserCreationForm(request.POST)
+        form = OobUserCreationForm(request.POST)
         if form.is_valid():
             form.save()
-            username = form.cleaned_data.get('username')
+            email = form.cleaned_data.get('email')
             password = form.cleaned_data.get('password1')
-            user = authenticate(username=username,password=password)
+            user = authenticate(username=email,password=password)
             login(request, user)
             return redirect('home')
     else:
-        form = UserCreationForm
+        form = OobUserCreationForm
         return render(request, 'app/register.html', {'form':form})
 
 class HomeView(TemplateView):

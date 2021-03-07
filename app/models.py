@@ -1,7 +1,33 @@
 from django.db import models
 from django.utils import timezone
 from django.conf import settings
+from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
+from django.utils.translation import ugettext_lazy as _
 
+from .managers import OobUserManager
+
+class OobUser(AbstractBaseUser, PermissionsMixin):
+    email = models.EmailField(_('email address'), unique=True)
+    is_staff = models.BooleanField(default=False)
+    is_superuser = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
+    date_joined = models.DateTimeField(default=timezone.now)
+
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = []
+
+    objects = OobUserManager()
+    
+
+    class Meta:
+        verbose_name = _('user')
+        verbose_name_plural = _('users')
+    
+
+    def __str__(self):
+        return self.email
+
+    
 class Tag(models.Model):
     tag_name = models.CharField(max_length=20)
 
@@ -11,6 +37,8 @@ class Tag(models.Model):
 
 class Project(models.Model):
     project_name = models.CharField(max_length=100)
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True)
+
 
     def __str__(self) -> str:
         return self.project_name
@@ -32,7 +60,7 @@ class Task(models.Model):
     completed = models.BooleanField('completed',default=False)
     # !!! Remove null=True when user functionality added
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True)
-    created_date = models.DateTimeField('date created')
+    created_date = models.DateTimeField('date created', editable=False)
     modified_date = models.DateTimeField('date modified')
     scheduled_date = models.DateTimeField('date scheduled', null=True)
     completed_date = models.DateTimeField('date completed', null=True)
