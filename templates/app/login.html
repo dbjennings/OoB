@@ -6,6 +6,11 @@
         {% csrf_token %}
         {{form.as_p}}
         <input type="submit" value="Login">
+        {% if messages %}
+            {% for message in messages %}
+            <p>{{message}}</p>
+            {% endfor %}
+        {% endif %}
     </form>
 
 {% endblock content %}

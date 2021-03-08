@@ -1,5 +1,6 @@
-from django.contrib.auth.forms import UserCreationForm, UserChangeForm
+from django.contrib.auth.forms import UserCreationForm, UserChangeForm, AuthenticationForm, UsernameField
 from django import forms
+from django.db.models import fields
 from django.forms import models
 
 from .models import OobUser, Task, Tag
@@ -18,6 +19,12 @@ class OobUserChangeForm(UserChangeForm):
         model = OobUser
         fields = ('email',)
 
+
+class OobUserLoginForm(AuthenticationForm):
+    
+    class Meta:
+        model = OobUser
+        fields = ()
 
 class TaskAddForm(forms.ModelForm):
     
