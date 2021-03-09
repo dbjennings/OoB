@@ -6,7 +6,7 @@ from .models import OobUser, Task, Tag
 
 @admin.register(OobUser)
 class OobUserAdmin(UserAdmin):
-    add_form = OobUserCreationForm
+    add_form = OobRegisterNewUserForm
     form = OobUserChangeForm
     model = OobUser
     list_display = ('email', 'is_staff', 'is_active',)
@@ -24,7 +24,6 @@ class OobUserAdmin(UserAdmin):
     search_fields = ('email',)
     ordering = ('email',)
 
-
 class TagInLine(admin.TabularInline):
     model = Task.tags.through
     extra = 0
@@ -37,12 +36,12 @@ class TagAdmin(admin.ModelAdmin):
 @admin.register(Task)
 class TaskAdmin(admin.ModelAdmin):
     model = Task
-    add_form = TaskAddForm
+    add_form = CreateNewTaskForm
     form = TaskChangeForm
-    list_display = ('task_name','section','project','completed','created_by','created_date',)
+    list_display = ('task','section','project','completed','created_by','created_date',)
     fieldsets = (
-        (None, {'fields': ('task_name',)}),
-        ('Generation/Modification', {'classes':('wide',),'fields':('created_by','modified_date',)}),
+        (None, {'fields': ('task',)}),
+        ('Generation/Modification', {'classes':('wide',),'fields':('created_by',)}),
         ('Scheduling', {'fields':('scheduled_date','completed_date')})
     )
     inlines = [TagInLine]

@@ -2,7 +2,11 @@
 
 {% block content %}
 {% for task in tasks %}
-    <h2>{{task}}</h2>
+    {% if task.completed %}
+        <h2><strike>{{task}}</strike></h2>
+    {% else %}
+        <h2>{{task}}</h2>
+    {% endif %}
     {% for tag in task.tags.all %}
         <p>{{tag}}</p>
     {% endfor %}

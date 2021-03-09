@@ -1,11 +1,10 @@
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm, AuthenticationForm, UsernameField
 from django import forms
-from django.db.models import fields
-from django.forms import models
 
 from .models import OobUser, Task, Tag
 
-class OobUserCreationForm(UserCreationForm):
+
+class OobRegisterNewUserForm(UserCreationForm):
     name = forms.CharField(max_length=100)
 
     class Meta(UserCreationForm.Meta):
@@ -18,26 +17,21 @@ class OobUserChangeForm(UserChangeForm):
     class Meta(UserChangeForm.Meta):
         model = OobUser
         fields = ('email',)
+      
 
+class CreateNewTaskForm(forms.ModelForm):
+    task = forms.CharField(widget=forms.Textarea)
 
-class OobUserLoginForm(AuthenticationForm):
-    
-    class Meta:
-        model = OobUser
-        fields = ()
-
-class TaskAddForm(forms.ModelForm):
-    
     class Meta:
         model = Task
-        fields = '__all__'
+        fields = ('task',)
 
 
 class TaskChangeForm(forms.ModelForm):
     
     class Meta:
         model = Task
-        fields = '__all__'
+        exclude = ('created_date', 'modified_date',)
 
 
 class TagAddForm(forms.ModelForm):

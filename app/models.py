@@ -3,8 +3,11 @@ from django.utils import timezone
 from django.conf import settings
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.utils.translation import ugettext_lazy as _
+from django.contrib.auth import get_user_model
 
 from .managers import OobUserManager
+
+
 
 class OobUser(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(_('email address'), unique=True)
@@ -33,7 +36,8 @@ class OobUser(AbstractBaseUser, PermissionsMixin):
     
 class Tag(models.Model):
     tag_name = models.CharField(max_length=20)
-
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True)
+    
     def __str__(self) -> str:
         return self.tag_name
 
@@ -41,7 +45,8 @@ class Tag(models.Model):
 class Project(models.Model):
     project_name = models.CharField(max_length=100)
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True)
-
+    created_date = models.DateTimeField('date_created', editable=False, auto_now_add=True)
+    modified_date = models.DateTimeField('date_modified', auto_now=True)
 
     def __str__(self) -> str:
         return self.project_name
@@ -50,29 +55,30 @@ class Project(models.Model):
 class Section(models.Model):
     section_name = models.CharField(max_length=100)
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True)
+    created_date = models.DateTimeField('date_created', editable=False, auto_now_add=True)
+    modified_date = models.DateTimeField('date_modified', auto_now=True)
 
     def __str__(self) -> str:
         return self.section_name
 
 
 class Task(models.Model):
-    task_name = models.CharField(max_length=200)
+    task = models.CharField(max_length=200)
     tags = models.ManyToManyField(Tag)
     section = models.ForeignKey(Section, on_delete=models.CASCADE, null=True)
     project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True)
-    completed = models.BooleanField('completed',default=False)
-    # !!! Remove null=True when user functionality added
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True)
-    created_date = models.DateTimeField('date created', editable=False)
-    modified_date = models.DateTimeField('date modified')
-    scheduled_date = models.DateTimeField('date scheduled', null=True)
-    completed_date = models.DateTimeField('date completed', null=True)
+    created_date = models.DateTimeField('date_created', editable=False, auto_now_add=True)
+    modified_date = models.DateTimeField('date_modified', auto_now=True)
+    scheduled_date = models.DateTimeField('date_scheduled', null=True)
+    completed_date = models.DateTimeField('date_completed', null=True)
 
-    def save(self, *args, **kwargs):
-        if not self.id:
-            self.created_date = timezone.now()
-        self.modified_date = timezone.now()
-        return super(Task, self).save(*args, **kwargs)
-    
+    @property
+    def completed(self):
+        return not (self.completed_date==None)
+
+    # def save(self, *args, **kwargs):
+
     def __str__(self) -> str:
-        return self.task_name
+        return self.task

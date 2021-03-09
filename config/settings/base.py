@@ -4,7 +4,12 @@ import environ
 ROOT_DIR = environ.Path(__file__) - 3
 APPS_DIR = ROOT_DIR.path('app')
 
+# Customized Authentication Constants
 AUTH_USER_MODEL = 'app.oobuser'
+LOGIN_URL = '/login'
+LOGIN_REDIRECT_URL = '/home'
+LOGOUT_REDIRECT_URL = '/'
+
 
 # Initialize and read in the environment
 ENV = environ.Env()
