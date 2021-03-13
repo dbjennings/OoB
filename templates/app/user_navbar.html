@@ -1,0 +1,115 @@
+{% extends 'app/base.html' %}
+
+{% load static %}
+
+{# Custom CSS for the Navbar #}
+{% block css_navbar %}
+<link rel="stylesheet" type="text/css" href="{% static 'user_navbar.css' %}">
+{% endblock css_navbar %}
+
+{% block navbar %}
+{# Responsive Navbar - Breakpoint = Small Screens #}
+<nav class="navbar navbar-expand-sm navbar-light bg-primary p-0">
+    <div class="container-fluid">
+      {# Responsive Navbar - Collapsed #}
+      <a class="navbar-brand h2 mb-0" href="#">OoB</a>
+      <button class="navbar-toggler btn-light" type="button" data-toggle="collapse" data-target="#oobMenu">
+        <i class="fas fa-tasks fa-md" style="color: #DDF;"></i>
+      </button>
+      {# Responsive Navbar - Expanded #}
+      <div class="collapse navbar-collapse" id="oobMenu">
+        {# Left section of the Navbar #}
+        <ul class="navbar-nav mr-auto h-100">
+          {# Dropdown menu for the Projects options #}
+          <li class="dropdown">
+            <button class="btn btn-primary rounded-0 h-100" type="button" id="projectsButton" data-toggle="dropdown"><span class="dropdown-toggle-chevron my-auto h5">Projects</span></button>
+            <ul class="dropdown-menu my-0">
+            {# Load User Project options #}
+            {% for project in projects %}
+              <a class="dropdown-item" href="{% url 'project' project.id %}">
+                {{ project.project_name|truncatechars:20 }}</a>
+            {% endfor %}
+              <div class="dropdown-divider"></div>
+              {# Modal menu for creating a new project #}
+              
+              <button type="button" class="dropdown-item" data-toggle="modal" data-target="#newProjectModal">New Project</button>
+
+              
+            </ul>
+          </li>
+          {# Dropdown Menu for the Calendar options #}
+          <li class="dropdown">
+            <button class="btn btn-primary rounded-0 h-100" type="button" id="calendarButton" data-toggle="dropdown">
+              <span class="dropdown-toggle-chevron my-auto h5">Calendar</h5></span>
+            <div class="dropdown-menu my-0 rounded-0">
+              <a class="dropdown-item" href="#">Today</a>
+              <a class="dropdown-item" href="#">This Week</a>
+              <a class="dropdown-item" href="#">This Month</a>
+              <a class="dropdown-item" href="#">This Year</a>
+            </div>
+          </li>
+        </ul>
+        {# Right section of the navbar #}
+        <ul class="navbar-nav">
+          {# Dropdown for the quickTask form #}
+          <li class="dropdown">
+            <button type="button" class="btn btn-primary mx-4 py-auto" data-toggle="dropdown" role="button"><i class="fas fa-plus fa-2x"></i></button>
+            <ul class="dropdown-menu dropdown-menu-right rounded-0">
+              <form class="px-4 py-1" method="POST" action="{% url 'post' %}">
+                {% csrf_token %}
+                <div class="form-group">
+                  <p>State your business:</p>
+                  <span>{{ quick_task_form.task }}</span>
+                </div>
+                  <button type="submit" class="btn btn-success w-100">Quick Task</button>
+              </form>
+            </ul>
+          </li>
+          {# Inbox Link with count of all non-categorized tasks #}
+          <li class="nav-item">
+            <a class="nav-link px-3" href="{% url 'inbox' %}">
+              <i class="fas fa-inbox fa-2x">
+                <span class="inbox-overlay rounded-pill shadow-lt">{{ inbox_count }}</span></i></a>
+          </li>
+          {# Dropdown for User Options #}
+          <li class="dropdown">
+            <button class="btn btn-primary rounded-0 h-100" type="button" id="projectsButton" data-toggle="dropdown"><i class="fas fa-user-circle fa-2x"></i></button>
+            <ul class="dropdown-menu dropdown-menu-right my-0">
+              <a class="dropdown-item disabled" href="#">Preferences</a>
+              <a class="dropdown-item disabled" href="#">Theme Selector</a>
+              <hr class="my-0">
+              <a class="dropdown-item" href="{% url 'logout' %}">Log Out</a>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  {# Modal dialog for creating a new project #}
+  <div class="modal fade" id="newProjectModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Add New Project</h5>
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        <form
+        <div class="modal-body w-100">
+          <label for="{{ project_form.project_name.id_for_label }}">
+            {{ project_form.project_name.label_tag|title }}</label>
+          {{ project_form.project_name }}
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-success">Create Project</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {# Content for user pages goes here #}
+  <div class="container-fluid">
+    {% block user_content %}{% endblock user_content %}
+  </div>
+{% endblock navbar %}

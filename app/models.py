@@ -3,10 +3,8 @@ from django.utils import timezone
 from django.conf import settings
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.utils.translation import ugettext_lazy as _
-from django.contrib.auth import get_user_model
 
 from .managers import OobUserManager
-
 
 
 class OobUser(AbstractBaseUser, PermissionsMixin):
@@ -77,8 +75,6 @@ class Task(models.Model):
     @property
     def completed(self):
         return not (self.completed_date==None)
-
-    # def save(self, *args, **kwargs):
 
     def __str__(self) -> str:
         return self.task

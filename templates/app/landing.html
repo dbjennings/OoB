@@ -1,5 +1,38 @@
-{% extends 'app/base.html' %}
+{% load static %}
 
-{% block content %}
-<h1>Landing Page</h1>
-{% endblock content %}
+<html lang="en">
+    <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" type="text/css" href="{% static 'bootstrap.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'landing.css' %}">
+
+    <title>Landing</title>
+    </head>
+    <body>
+        <div class="container-fluid">
+            <ul class="nav justify-content-center">
+                <li class="nav-item px-5">
+                    <a href="{% url 'login' %}" class="nav-link">Login</a></li>
+                <li class="nav-item px-5">
+                    <a href="{% url 'register' %}" class="nav-link">Register</a></li>
+            </ul>
+            <div class="row justify-content-center">
+                <div class="col-md-6 bg-primary mt-5 rounded">
+                <h1 class="text-center">Landing Page</h1>
+                <br>
+                <h1 class="text-center">OoB</h1>
+            </div>
+        </div>
+        
+
+
+
+
+    <script src="{% static 'jquery-3.5.1.slim.min.js' %}"></script>
+    <script src="{% static 'bootstrap.min.js' %}"></script>
+  </body>
+</html>

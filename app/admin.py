@@ -40,9 +40,15 @@ class TaskAdmin(admin.ModelAdmin):
     form = TaskChangeForm
     list_display = ('task','section','project','completed','created_by','created_date',)
     fieldsets = (
-        (None, {'fields': ('task',)}),
+        (None, {'fields': ('task','project')}),
         ('Generation/Modification', {'classes':('wide',),'fields':('created_by',)}),
         ('Scheduling', {'fields':('scheduled_date','completed_date')})
     )
     inlines = [TagInLine]
 
+@admin.register(Project)
+class ProjectAdmin(admin.ModelAdmin):
+    model = Project
+    add_form = ProjectAddForm
+    form = ProjectChangeForm
+    list_display = ('project_name','created_by','created_date',)

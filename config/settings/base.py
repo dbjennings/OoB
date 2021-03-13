@@ -9,7 +9,7 @@ AUTH_USER_MODEL = 'app.oobuser'
 LOGIN_URL = '/login'
 LOGIN_REDIRECT_URL = '/home'
 LOGOUT_REDIRECT_URL = '/'
-
+HOME_URL = '/home'
 
 # Initialize and read in the environment
 ENV = environ.Env()
@@ -67,10 +67,13 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'app.context_processors.user_context.user_context',
             ],
         },
     },
 ]
+
+
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
@@ -124,10 +127,12 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-STATIC_ROOT = str(ROOT_DIR.path('staticfiles'))
+STATIC_ROOT = str(ROOT_DIR.path('static'))
 
 STATICFILES_DIRS = (
-    str(APPS_DIR.path('app')),
+    str(ROOT_DIR.path('static').path('app')),
+    str(ROOT_DIR.path('static').path('css')),
+    str(ROOT_DIR.path('static').path('js')),
 )
 
 STATICFILES_FINDERS = (

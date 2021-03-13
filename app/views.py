@@ -6,7 +6,7 @@ from django.views.generic.edit import CreateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .forms import OobRegisterNewUserForm, CreateNewTaskForm
-from .models import OobUser, Task
+from .models import OobUser, Project, Task
 
 
 class CreateNewTaskView(CreateView, LoginRequiredMixin):
@@ -19,12 +19,13 @@ class CreateNewTaskView(CreateView, LoginRequiredMixin):
         return super().form_valid(form)
 
 class OobUserHomeView(TemplateView, LoginRequiredMixin):
-    template_name = 'app/home.html'
+    template_name = 'app/user_home.html'
     
 class OobRegisterNewUserView(CreateView):
     template_name = 'app/register.html'
     form_class = OobRegisterNewUserForm
     success_url = reverse_lazy('login')
+    redirect_authenticated_user = True
 
 class OobLoginView(LoginView):
     template_name = 'app/login.html'
@@ -37,12 +38,17 @@ class OobLoginView(LoginView):
 class InboxView(ListView, LoginRequiredMixin):
     template_name = 'app/inbox.html'
     context_object_name = 'tasks'
-    
+
     def get_queryset(self):
-        return Task.objects.filter(created_by=self.request.user)
+        return Task.objects.filter(created_by=self.request.user).order_by('completed_date', 'created_date')
+    
+    def get_context_data(self, **kwargs):
+        context = super(InboxView, self).get_context_data(**kwargs)
+        context['projects'] = Project.objects.filter(created_by=self.request.user)
+        return context
 
 class ProjectView(TemplateView, LoginRequiredMixin):
-    template_name = 'app/project.html'
+    template_name = 'app/user_project.html'
 
 class LandingView(TemplateView):
     template_name = 'app/landing.html'

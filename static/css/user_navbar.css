@@ -1,0 +1,29 @@
+.inbox-overlay {
+    position: relative;
+    text-align: center;
+    font-size: 1.25rem;
+    font-family: monospace;
+    color: rgba(255,255,255,0.9);
+    background-color: rgba(255,0,0,0.9);
+    right: 1.5rem;
+    top: 2px;
+  }
+  
+  .inbox-overlay::before,
+  .inbox-overlay::after {
+    content: "\00a0"
+  }
+    
+  .dropdown-toggle-chevron::after {
+    display: inline-block;
+    padding: 0.5rem;
+    font: normal normal normal 14px/1 FontAwesome;
+    content: "\f103";
+  }
+  
+  .dropdown-toggle-chevron:focus::after {
+    display: inline-block;
+    padding: 0.5rem;
+    font: normal normal normal 14px/1 FontAwesome;
+    content: "\f102";
+  }

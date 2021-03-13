@@ -1,14 +1,23 @@
-{% extends 'app/base.html' %}
+{% extends 'app/user_navbar.html' %}
 
 {% block content %}
-{% for task in tasks %}
-    {% if task.completed %}
-        <h2><strike>{{task}}</strike></h2>
-    {% else %}
-        <h2>{{task}}</h2>
-    {% endif %}
-    {% for tag in task.tags.all %}
-        <p>{{tag}}</p>
-    {% endfor %}
-{% endfor %}
+
+<div class="row">
+    <div class="col-sm-8 offset-sm-2">
+        <h3 class="text-center py-2">Inbox</h3>
+        <ul class="list-group list-group-flush">
+        {% for task in tasks %}
+            {% if task.completed %}
+            <li class="list-group-item"><strike>{{task}}</strike></li>
+            {% else %}
+            <li class="list-group-item">{{task}}</li>
+            {% endif %}
+        {% endfor %}
+        </ul>
+    </div>
+
+</div>
+
+
+
 {% endblock content %}
