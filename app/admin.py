@@ -5,9 +5,11 @@ from .forms import *
 from .models import OobUser, Task, Tag
 
 @admin.register(OobUser)
-class OobUserAdmin(UserAdmin):
-    add_form = OobRegisterNewUserForm
-    form = OobUserChangeForm
+
+
+class CoreUserAdmin(UserAdmin):
+    add_form = CoreUserAddForm
+    form = CoreUserChangeForm
     model = OobUser
     list_display = ('email', 'is_staff', 'is_active',)
     list_filter = ('email', 'is_staff', 'is_active',)
@@ -31,13 +33,13 @@ class TagInLine(admin.TabularInline):
 @admin.register(Tag)
 class TagAdmin(admin.ModelAdmin):
     model = Tag
-    add_form = TagAddForm
+    add_form = AdminTagAddForm
 
 @admin.register(Task)
 class TaskAdmin(admin.ModelAdmin):
     model = Task
-    add_form = CreateNewTaskForm
-    form = TaskChangeForm
+    add_form = AdminTaskAddForm
+    form = AdminTaskChangeForm
     list_display = ('task','section','project','completed','created_by','created_date',)
     fieldsets = (
         (None, {'fields': ('task','project','section')}),
@@ -49,8 +51,8 @@ class TaskAdmin(admin.ModelAdmin):
 @admin.register(Project)
 class ProjectAdmin(admin.ModelAdmin):
     model = Project
-    add_form = ProjectAddForm
-    form = ProjectChangeForm
+    add_form = AdminProjectAddForm
+    form = AdminProjectChangeForm
     list_display = ('project_name','created_by','created_date',)
 
 @admin.register(Section)

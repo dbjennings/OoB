@@ -4,7 +4,7 @@ from django.conf import settings
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.utils.translation import ugettext_lazy as _
 
-from .managers import OobUserManager
+from .managers import CoreUserManager
 
 
 class OobUser(AbstractBaseUser, PermissionsMixin):
@@ -18,7 +18,7 @@ class OobUser(AbstractBaseUser, PermissionsMixin):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
 
-    objects = OobUserManager()
+    objects = CoreUserManager()
     
     class Meta:
         verbose_name = _('user')
@@ -46,6 +46,13 @@ class Project(models.Model):
     created_date = models.DateTimeField('date_created', editable=False, auto_now_add=True)
     modified_date = models.DateTimeField('date_modified', auto_now=True)
 
+    @property
+    def tasks_completed(self):
+        '''
+        Returns the total number of completed tasks within the section
+        '''
+        return self.task_set.exclude(completed_date=None).count()
+
     def __str__(self) -> str:
         return self.project_name
 
@@ -59,6 +66,9 @@ class Section(models.Model):
 
     @property
     def tasks_completed(self):
+        '''
+        Returns the total number of completed tasks within the section
+        '''
         return self.task_set.exclude(completed_date=None).count()
 
     def __str__(self) -> str:

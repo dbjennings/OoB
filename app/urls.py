@@ -13,5 +13,5 @@ urlpatterns = [
     path('post', local_views.UserAddTaskView.as_view(), name='post'),
     path('project_add', local_views.UserAddProjectView.as_view(), name='project_add'),
     path('create_section/<int:prj>', local_views.UserAddSectionView.as_view(), name='create_section'),
-    path('section/<int:prj>/<int:sec>', local_views.UserAddTaskToSection.as_view(), name='task_to_section'),
+    path('section/<int:prj>/<int:sec>', local_views.UserTaskAddToSection.as_view(), name='task_to_section'),
 ]

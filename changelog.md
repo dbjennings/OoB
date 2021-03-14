@@ -25,7 +25,7 @@
   - [x] Calendar
   - [x] Create New Task
   - [x] Create New Project
-  - [ ] Create New Section
+  - [x] Create New Section
 
 ### Forms
 
@@ -34,7 +34,7 @@
 - [ ] Oob App Forms
   - [x] Create New Task
   - [x] Create New Project
-  - [ ] Create New Section
+  - [x] Create New Section
 
 ### Templates
 
@@ -46,7 +46,7 @@
   - [x] user_navbar.html
   - [ ] user_home.html
   - [ ] user_inbox.html
-  - [ ] user_project.html
+  - [x] user_project.html
   - [ ] user_calendar.html
 
 ### Tests

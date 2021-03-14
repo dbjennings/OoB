@@ -54,12 +54,11 @@
           {# Dropdown for the quickTask form #}
           <li class="dropdown">
             <button type="button" class="btn btn-primary mx-4 py-auto" data-toggle="dropdown" role="button"><i class="fas fa-plus fa-2x"></i></button>
-            <ul class="dropdown-menu dropdown-menu-right rounded-0">
+            <ul class="dropdown-menu dropdown-menu-right rounded-0" style="width: 40vw;">
               <form class="px-4 py-1" method="POST" action="{% url 'post' %}">
                 {% csrf_token %}
                 <div class="form-group">
-                  <p>State your business:</p>
-                  <span>{{ quick_task_form.task }}</span>
+                  {{ quick_task_form.task }}
                 </div>
                   <button type="submit" class="btn btn-success w-100">Quick Task</button>
               </form>
@@ -69,7 +68,7 @@
           <li class="nav-item">
             <a class="nav-link px-3" href="{% url 'inbox' %}">
               <i class="fas fa-inbox fa-2x">
-                <span class="inbox-overlay rounded-pill shadow-lt">{{ inbox_count }}</span></i></a>
+                <span class="inbox-overlay rounded-pill shadow-lt ">{{ inbox_count }}</span></i></a>
           </li>
           {# Dropdown for User Options #}
           <li class="dropdown">

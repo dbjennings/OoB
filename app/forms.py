@@ -1,66 +1,68 @@
-from django.contrib.auth.forms import UserCreationForm, UserChangeForm, AuthenticationForm, UsernameField
+from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django import forms
-from django.forms import fields
 
 from .models import OobUser, Project, Section, Task, Tag
 
 
-class OobRegisterNewUserForm(UserCreationForm):
+class CoreUserAddForm(UserCreationForm):
     name = forms.CharField(max_length=100)
 
     class Meta(UserCreationForm.Meta):
         model = OobUser
         fields = ('email','name',)
 
-
-class OobUserChangeForm(UserChangeForm):
+class CoreUserChangeForm(UserChangeForm):
 
     class Meta(UserChangeForm.Meta):
         model = OobUser
         fields = ('email',)
-      
 
-class CreateNewTaskForm(forms.ModelForm):
+
+
+class AdminTaskAddForm(forms.ModelForm):
     task = forms.CharField(max_length=200, 
                            widget=forms.TextInput(
-                           attrs={'class': 'form-control d-inline-block',
-                                  'placeholder': 'New Task'}))
+                           attrs={'class': 'form-control',
+                                  'placeholder': 'New Task',}))
     class Meta:
         model = Task
         fields = ('task',)
 
-
-class TaskChangeForm(forms.ModelForm):
+class AdminTaskChangeForm(forms.ModelForm):
     
     class Meta:
         model = Task
         exclude = ('created_date', 'modified_date',)
 
-
-class TagAddForm(forms.ModelForm):
+class AdminTagAddForm(forms.ModelForm):
     
     class Meta:
         model = Tag
         fields = ("tag_name",)
 
-
-class ProjectAddForm(forms.ModelForm):
-
-    class Meta:
-        model = Project
-        fields = '__all__'
-
-
-class ProjectChangeForm(forms.ModelForm):
+class AdminProjectAddForm(forms.ModelForm):
 
     class Meta:
         model = Project
         fields = '__all__'
 
+class AdminProjectChangeForm(forms.ModelForm):
 
-class AddTaskForm(forms.ModelForm):
+    class Meta:
+        model = Project
+        fields = '__all__'
+
+class AdminAddSectionForm(forms.ModelForm):
+
+    class Meta:
+        model = Section
+        fields = ('section_name','project','created_by',)
+
+
+
+class UserTaskAddForm(forms.ModelForm):
     task = forms.CharField(max_length=200, 
-                           widget=forms.Textarea(
+                           widget=forms.TextInput(
                            attrs={'class': 'form-control',
                                   'placeholder': 'New Task'}))
 
@@ -68,8 +70,7 @@ class AddTaskForm(forms.ModelForm):
         model = Task
         fields = ('task',)
 
-
-class AddProjectForm(forms.ModelForm):
+class UserProjectAddForm(forms.ModelForm):
     project_name = forms.CharField(max_length=100, 
                                    widget=forms.TextInput(
                                    attrs={'class': 'form-control',
@@ -79,12 +80,6 @@ class AddProjectForm(forms.ModelForm):
     class Meta:
         model = Project
         fields = ('project_name',)
-
-class AdminAddSectionForm(forms.ModelForm):
-
-    class Meta:
-        model = Section
-        fields = ('section_name','project','created_by',)
 
 class UserAddSectionForm(forms.ModelForm):
     section_name = forms.CharField(max_length=100, 

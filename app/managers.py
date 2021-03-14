@@ -3,7 +3,7 @@ from django.utils import timezone
 
 from django.utils.translation import ugettext_lazy as _
 
-class OobUserManager(BaseUserManager):
+class CoreUserManager(BaseUserManager):
     use_in_migrations = True
 
     def create_user(self, email, password=None, **extra_fields):
