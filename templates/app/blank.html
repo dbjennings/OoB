@@ -1,0 +1,3 @@
+{% for error_field, error_message in form.errors.items %}
+    {{ error_field|striptags }}: {{ error_message|striptags }}
+{% endfor %}

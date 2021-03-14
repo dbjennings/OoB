@@ -42,7 +42,7 @@ class Tag(models.Model):
 
 class Project(models.Model):
     project_name = models.CharField(max_length=100)
-    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True)
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     created_date = models.DateTimeField('date_created', editable=False, auto_now_add=True)
     modified_date = models.DateTimeField('date_modified', auto_now=True)
 
@@ -57,6 +57,10 @@ class Section(models.Model):
     created_date = models.DateTimeField('date_created', editable=False, auto_now_add=True)
     modified_date = models.DateTimeField('date_modified', auto_now=True)
 
+    @property
+    def tasks_completed(self):
+        return self.task_set.exclude(completed_date=None).count()
+
     def __str__(self) -> str:
         return self.section_name
 
@@ -64,13 +68,13 @@ class Section(models.Model):
 class Task(models.Model):
     task = models.CharField(max_length=200)
     tags = models.ManyToManyField(Tag)
-    section = models.ForeignKey(Section, on_delete=models.CASCADE, null=True)
-    project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True)
+    section = models.ForeignKey(Section, on_delete=models.CASCADE, null=True, blank=True)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True, blank=True)
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True)
     created_date = models.DateTimeField('date_created', editable=False, auto_now_add=True)
     modified_date = models.DateTimeField('date_modified', auto_now=True)
-    scheduled_date = models.DateTimeField('date_scheduled', null=True)
-    completed_date = models.DateTimeField('date_completed', null=True)
+    scheduled_date = models.DateTimeField('date_scheduled', null=True, blank=True)
+    completed_date = models.DateTimeField('date_completed', null=True, blank=True)
 
     @property
     def completed(self):

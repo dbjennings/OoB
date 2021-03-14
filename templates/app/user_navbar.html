@@ -94,16 +94,19 @@
           <h5 class="modal-title" id="exampleModalLabel">Add New Project</h5>
             <button type="button" class="close" data-dismiss="modal">&times;</button>
         </div>
-        <form
-        <div class="modal-body w-100">
-          <label for="{{ project_form.project_name.id_for_label }}">
-            {{ project_form.project_name.label_tag|title }}</label>
-          {{ project_form.project_name }}
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-          <button type="button" class="btn btn-success">Create Project</button>
-        </div>
+        {# Form sent to the POST-only view project_add #}
+        <form method="POST" action="{% url 'project_add' %}">
+        {% csrf_token %}
+          <div class="modal-body w-100">
+            <label for="{{ project_form.project_name.id_for_label }}">
+              {{ project_form.project_name.label_tag|title }}</label>
+            {{ project_form.project_name }}
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-success">Create Project</button>
+          </div>
+        </form>
       </div>
     </div>
   </div>

@@ -14,17 +14,17 @@
 
 ### Views
 
-- [ ] Core Views
-  - [ ] Landing
-  - [ ] Login
-  - [ ] Register
+- [x] Core Views
+  - [x] Landing
+  - [x] Login
+  - [x] Register
 - [ ] Oob App Views
-  - [ ] Home
-  - [ ] Inbox
-  - [ ] Project
-  - [ ] Calendar
+  - [x] Home
+  - [x] Inbox
+  - [x] Project
+  - [x] Calendar
   - [x] Create New Task
-  - [ ] Create New Project
+  - [x] Create New Project
   - [ ] Create New Section
 
 ### Forms
