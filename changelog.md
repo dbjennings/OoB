@@ -42,10 +42,11 @@
   - [x] base.html
   - [ ] login.html
   - [ ] register.html
+  - [ ] landing.html
 - [ ] Oob App Templates
   - [x] user_navbar.html
   - [ ] user_home.html
-  - [ ] user_inbox.html
+  - [x] user_inbox.html
   - [x] user_project.html
   - [ ] user_calendar.html
 
@@ -80,5 +81,5 @@
 
 ### Project Organization
 
-- [ ] Separate core and OoB app code
+- [x] Separate core and OoB app code
 - [ ] Comment all necessary code

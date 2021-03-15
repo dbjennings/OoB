@@ -6,15 +6,15 @@ from django.utils.translation import ugettext_lazy as _
 
 class Tag(models.Model):
     tag_name = models.CharField(max_length=20)
-    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True)
     
     def __str__(self) -> str:
         return self.tag_name
 
 
 class Project(models.Model):
-    project_name = models.CharField(max_length=100)
-    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    project = models.CharField(max_length=100)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     created_date = models.DateTimeField('date_created', editable=False, auto_now_add=True)
     modified_date = models.DateTimeField('date_modified', auto_now=True)
 
@@ -26,13 +26,13 @@ class Project(models.Model):
         return self.task_set.exclude(completed_date=None).count()
 
     def __str__(self) -> str:
-        return self.project_name
+        return self.project
 
 
 class Section(models.Model):
-    section_name = models.CharField(max_length=100)
+    section = models.CharField(max_length=100)
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
-    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True)
     created_date = models.DateTimeField('date_created', editable=False, auto_now_add=True)
     modified_date = models.DateTimeField('date_modified', auto_now=True)
 
@@ -44,7 +44,7 @@ class Section(models.Model):
         return self.task_set.exclude(completed_date=None).count()
 
     def __str__(self) -> str:
-        return self.section_name
+        return self.section
 
 
 class Task(models.Model):
@@ -52,7 +52,7 @@ class Task(models.Model):
     tags = models.ManyToManyField(Tag)
     section = models.ForeignKey(Section, on_delete=models.CASCADE, null=True, blank=True)
     project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True, blank=True)
-    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True)
     created_date = models.DateTimeField('date_created', editable=False, auto_now_add=True)
     modified_date = models.DateTimeField('date_modified', auto_now=True)
     scheduled_date = models.DateTimeField('date_scheduled', null=True, blank=True)

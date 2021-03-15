@@ -41,7 +41,7 @@ class AdminAddSectionForm(forms.ModelForm):
 
     class Meta:
         model = Section
-        fields = ('section_name','project','created_by',)
+        fields = ('section','project','user',)
 
 
 
@@ -62,21 +62,21 @@ class UserTaskCompletedForm(forms.ModelForm):
         fields = ('completed_date',)
 
 class UserProjectAddForm(forms.ModelForm):
-    project_name = forms.CharField(max_length=100, 
+    project = forms.CharField(max_length=100, 
                                    widget=forms.TextInput(
                                    attrs={'class': 'form-control',
                                           'placeholder': 'Your Project Name',}))
 
     class Meta:
         model = Project
-        fields = ('project_name',)
+        fields = ('project',)
 
 class UserAddSectionForm(forms.ModelForm):
-    section_name = forms.CharField(max_length=100, 
+    section = forms.CharField(max_length=100, 
                                    widget=forms.TextInput(
                                    attrs={'class': 'form-control',
                                           'placeholder': 'Section Name',}))
 
     class Meta:
         model = Section
-        fields = ('section_name',)
+        fields = ('section',)

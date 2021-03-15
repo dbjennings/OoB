@@ -12,14 +12,14 @@ from .models import Project, Section, Task
 
 
 class UserTaskAddView(CreateView, LoginRequiredMixin):
-    template_name = 'app/post.html'
+    template_name = 'app/blank.html'
     form_class = UserTaskAddForm
 
     def get_success_url(self):
         return self.request.POST.get('next')
 
     def form_valid(self, form):
-        form.instance.created_by = self.request.user
+        form.instance.user = self.request.user
         return super().form_valid(form)
 
 class UserTaskCompleteToggleView(UpdateView, LoginRequiredMixin):
@@ -50,9 +50,9 @@ class UserProjectAddView(CreateView, LoginRequiredMixin):
 
     def form_valid(self, form):
         '''
-        Sets the value of Project.created_by to the current user
+        Sets the value of Project.user to the current user
         '''
-        form.instance.created_by = self.request.user
+        form.instance.user = self.request.user
         return super(UserProjectAddView, self).form_valid(form)
     
     def get_success_url(self):
@@ -72,7 +72,7 @@ class UserInboxView(ListView, LoginRequiredMixin):
         '''
         Returns a queryset of all user tasks that aren't in a section or project
         '''
-        return Task.objects.filter(created_by=self.request.user, project=None, section=None
+        return Task.objects.filter(user=self.request.user, project=None, section=None
                           ).order_by('completed_date', 'created_date')
 
 class UserProjectView(DetailView, LoginRequiredMixin):
@@ -90,7 +90,7 @@ class UserAddSectionView(CreateView, LoginRequiredMixin):
         return reverse('project', kwargs={'pk':self.kwargs['prj']})
 
     def form_valid(self, form):
-        form.instance.created_by = self.request.user
+        form.instance.user = self.request.user
         form.instance.project = Project.objects.get(pk=self.kwargs['prj'])
         return super().form_valid(form)
 
@@ -102,7 +102,7 @@ class UserTaskAddToSectionView(CreateView, LoginRequiredMixin):
         return self.request.POST.get('next')
 
     def form_valid(self, form):
-        form.instance.created_by = self.request.user
+        form.instance.user = self.request.user
         form.instance.section = Section.objects.get(pk=self.kwargs['pk'])
         return super().form_valid(form)
 
@@ -114,6 +114,6 @@ class UserTaskAddToProjectView(CreateView, LoginRequiredMixin):
         return self.request.POST.get('next')
 
     def form_valid(self, form):
-        form.instance.created_by = self.request.user
+        form.instance.user = self.request.user
         form.instance.project = Project.objects.get(pk=self.kwargs['pk'])
         return super().form_valid(form)
