@@ -3,7 +3,7 @@ from django.urls import reverse_lazy
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 ROOT_DIR = environ.Path(__file__) - 3
-APPS_DIR = ROOT_DIR.path('app')
+APPS_DIR = ROOT_DIR.path('apps')
 
 # Customized Authentication Constants
 AUTH_USER_MODEL = 'core.oobuser'
@@ -38,7 +38,7 @@ THIRD_PARTY_APPS = (
 )
 
 LOCAL_APPS = (
-    'app.apps.AppConfig',
+    'apps.OoB.apps.OoBConfig',
     'core.apps.CoreConfig'
 )
 
@@ -69,7 +69,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'app.context_processors.user_context.user_context',
+                'apps.OoB.context_processors.user_context.user_context',
             ],
         },
     },
