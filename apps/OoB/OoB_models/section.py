@@ -5,7 +5,6 @@ from django.utils.translation import ugettext_lazy as _
 from .project import Project
 
 
-
 class Section(models.Model):
     section = models.CharField(max_length=100)
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
