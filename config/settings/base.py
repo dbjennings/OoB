@@ -1,13 +1,14 @@
 import environ
+from django.urls import reverse_lazy
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 ROOT_DIR = environ.Path(__file__) - 3
 APPS_DIR = ROOT_DIR.path('app')
 
 # Customized Authentication Constants
-AUTH_USER_MODEL = 'app.oobuser'
+AUTH_USER_MODEL = 'core.oobuser'
 LOGIN_URL = '/login'
-LOGIN_REDIRECT_URL = '/home'
+LOGIN_REDIRECT_URL = reverse_lazy('home')
 LOGOUT_REDIRECT_URL = '/'
 HOME_URL = '/home'
 
@@ -18,7 +19,7 @@ if ENV.bool('DJANGO_READ_ENV_FILE', default=True):
     ENV.read_env(env_file=f'{ROOT_DIR}\.env')
     
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = ENV('DJANGO_SECRET_KEY')
+SECRET_KEY = ENV('DJANGO_SECRET_KEY', default="nifh$zxc0m463g#_#wh#&#j3@!7zksm727nb5h4yn0e%^%$)+q")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = ENV.bool('DJANGO_DEBUG', default=False)
@@ -38,6 +39,7 @@ THIRD_PARTY_APPS = (
 
 LOCAL_APPS = (
     'app.apps.AppConfig',
+    'core.apps.CoreConfig'
 )
 
 # Application definitions compiled

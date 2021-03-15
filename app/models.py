@@ -4,34 +4,6 @@ from django.conf import settings
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.utils.translation import ugettext_lazy as _
 
-from .managers import CoreUserManager
-
-
-class OobUser(AbstractBaseUser, PermissionsMixin):
-    email = models.EmailField(_('email address'), unique=True)
-    name = models.CharField(_('first name'), max_length=100)
-    is_staff = models.BooleanField(default=False)
-    is_superuser = models.BooleanField(default=False)
-    is_active = models.BooleanField(default=True)
-    date_joined = models.DateTimeField(default=timezone.now)
-
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = []
-
-    objects = CoreUserManager()
-    
-    class Meta:
-        verbose_name = _('user')
-        verbose_name_plural = _('users')
-    
-    @property
-    def first_name(self):
-        return self.name.split(' ')[0]
-
-    def __str__(self):
-        return self.email
-
-    
 class Tag(models.Model):
     tag_name = models.CharField(max_length=20)
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True)

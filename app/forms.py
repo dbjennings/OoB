@@ -1,22 +1,7 @@
-from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django import forms
+from django.forms import fields
 
-from .models import OobUser, Project, Section, Task, Tag
-
-
-class CoreUserAddForm(UserCreationForm):
-    name = forms.CharField(max_length=100)
-
-    class Meta(UserCreationForm.Meta):
-        model = OobUser
-        fields = ('email','name',)
-
-class CoreUserChangeForm(UserChangeForm):
-
-    class Meta(UserChangeForm.Meta):
-        model = OobUser
-        fields = ('email',)
-
+from .models import Project, Section, Task, Tag
 
 
 class AdminTaskAddForm(forms.ModelForm):
@@ -70,12 +55,17 @@ class UserTaskAddForm(forms.ModelForm):
         model = Task
         fields = ('task',)
 
+class UserTaskCompletedForm(forms.ModelForm):
+
+    class Meta:
+        model = Task
+        fields = ('completed_date',)
+
 class UserProjectAddForm(forms.ModelForm):
     project_name = forms.CharField(max_length=100, 
                                    widget=forms.TextInput(
                                    attrs={'class': 'form-control',
-                                          'placeholder': 'Your Project Name',
-                                          'cols': '200'}))
+                                          'placeholder': 'Your Project Name',}))
 
     class Meta:
         model = Project

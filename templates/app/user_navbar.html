@@ -12,7 +12,7 @@
 <nav class="navbar navbar-expand-sm navbar-light bg-primary p-0">
     <div class="container-fluid">
       {# Responsive Navbar - Collapsed #}
-      <a class="navbar-brand h2 mb-0" href="#">OoB</a>
+      <a class="navbar-brand h2 mb-0" href="{% url 'home' %}">OoB</a>
       <button class="navbar-toggler btn-light" type="button" data-toggle="collapse" data-target="#oobMenu">
         <i class="fas fa-tasks fa-md" style="color: #DDF;"></i>
       </button>
@@ -60,7 +60,8 @@
                 <div class="form-group">
                   {{ quick_task_form.task }}
                 </div>
-                  <button type="submit" class="btn btn-success w-100">Quick Task</button>
+                 <input type="hidden" name="next" value="{{ request.path }}">
+                <button type="submit" class="btn btn-success w-100">Quick Task</button>
               </form>
             </ul>
           </li>

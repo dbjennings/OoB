@@ -6,25 +6,47 @@
     <div class="col-sm-8 offset-sm-2">
         <h3 class="text-center py-2">{{ project.project_name }}</h3>
         <div class="accordion" id="accordionProject">
+
+            {# Project Tasks #}
             <div class="card">
                 <div class="card-header" id="freeTasks">
                     <h5 class="mb-0">
                         <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseFreeTasks">
-                        Tasks without a Section</button>
+                        PROJECT TASKS</button>
+                        <span class="float-right my-auto h6">{{ project.tasks_completed }}/{{ project.task_set.all|length }} Tasks Completed</span>
                     </h5>
                 </div>
                 <div id="collapseFreeTasks" class="collapse show">
                     <div class="card-body">
-                    {% for task in project.task_set.all %}
-                        {% if task.completed %}
-                        <li class="list-group-item"><strike>{{task}}</strike></li>
-                        {% else %}
-                        <li class="list-group-item">{{task}}</li>
+                        <ul class="list-group">
+                        {% for task in project.task_set.all %}
+                        {% if task.completed is False %}
+                        <li class="list-group-item my-0 py-0">
+                            <form method="POST" action="{% url 'task_complete' task.id %}">
+                                {% csrf_token %}
+                                <input type="hidden" name="next" value="{{ request.path }}">
+                                <button type="submit" class="btn btn-outline-primary"><i class="far fa-check-circle"></i></button>
+                                {{ task }}
+                            </form>
+                        </li>
                         {% endif %}
-                    {% endfor %}                        
+                        {% endfor %}
+                        </ul>
+                        <div class="form-group">
+                            <form class="input-group" method="POST" action="{% url 'task_to_project' project.pk %}">
+                                {% csrf_token %}
+                                {{ task_form.task }}
+                                <input type="hidden" name="next" value="{{ request.path }}">
+                                <div class="input-group-append">
+                                    <button type = "submit" class="btn btn-outline-primary" type="submit" id="submitButton">Submit</button>
+                                </div>
+                            </form>
+                        </div>                        
                     </div>
                 </div>
             </div>
+
+            {# Section Generator #}
             {% for section in project.section_set.all %}
             <div class="card">
                 <div class="card-header" id="sectionTasks{{ forloop.counter }}">
@@ -36,29 +58,36 @@
                 </div>
                 <div id="collapseSection{{ forloop.counter }}" class="collapse">
                     <div class="card-body">
-                        <ul>
                         {% for task in section.task_set.all %}
-                            {% if task.completed %}
-                            <li class="list-group-item"><strike>{{task}}</strike></li>
-                            {% else %}
-                            <li class="list-group-item">{{task}}</li>
-                            {% endif %}
+                        {% if task.completed is False %}
+                        <li class="list-group-item">
+                            <form method="POST" action="{% url 'task_complete' task.id %}">
+                                {% csrf_token %}
+                                <input type="hidden" name="next" value="{{ request.path }}">
+                                <button type="submit" class="btn btn-outline-primary"><i class="far fa-check-circle"></i></button>
+                                {{ task }}
+                            </form>
+                        </li>
+                        {% endif %}
                         {% endfor %}
-                            <div class="form-group w-100">
-                                <form class="input-group mb-3" method="POST" action="{% url 'task_to_section' project.pk section.pk %}">
-                                    {% csrf_token %}
-                                    {{ task_form.task }}
-                                    <div class="input-group-append">
-                                        <button type = "submit" class="btn btn-outline-primary" type="submit" id="submitButton">Submit</button>
-                                    </div>
-                                </form>
-                            </div>                        
-                        </ul>                        
+
+                        <div class="form-group">
+                            <form class="input-group mb-3" method="POST" action="{% url 'task_to_section' section.pk %}">
+                                {% csrf_token %}
+                                {{ task_form.task }}
+                                <input type="hidden" name="next" value="{{ request.path }}">
+                                <div class="input-group-append">
+                                    <button type = "submit" class="btn btn-outline-primary" type="submit" id="submitButton">Submit</button>
+                                </div>
+                            </form>
+                        </div>
+                    </ul>                        
                     </div>
                 </div>
             </div>
             {% endfor %}
 
+            {# Create a new Section #}
             <div class="card">
                 <div class="card-header" id="createSection">
                     <h2 class="mb-0 btn-group-lg">
@@ -72,6 +101,7 @@
                             <form class="input-group mb-3" method="POST" action="{% url 'create_section' project.pk %}">
                                 {% csrf_token %}
                                 {{ section_form.section_name }}
+                                <input type="hidden" name="next" value="{{ request.path }}">
                                 <div class="input-group-append">
                                     <button type = "submit" class="btn btn-outline-primary" type="submit" id="submitButton">Submit</button>
                                 </div>
@@ -80,6 +110,8 @@
                     </div>
                 </div>
             </div>
+
+
         </div>
     </div>
 </div>

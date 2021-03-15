@@ -3,43 +3,45 @@ from django.views.generic import TemplateView, ListView
 from django.contrib import messages
 from django.urls import reverse, reverse_lazy
 from django.views.generic.detail import DetailView
-from django.views.generic.edit import CreateView
+from django.views.generic.edit import CreateView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.utils import timezone
 
-from .forms import UserProjectAddForm, CoreUserAddForm, UserTaskAddForm, UserAddSectionForm
+from .forms import UserProjectAddForm, UserTaskAddForm, UserAddSectionForm, UserTaskCompletedForm
 from .models import Project, Section, Task
 
 
-
-class CoreLoginView(LoginView):
-    template_name = 'app/login.html'
-    success_url = 'home'
-    redirect_authenticated_user = True
-    
-    class Meta:
-        pass
-
-class CoreRegisterUserView(CreateView):
-    template_name = 'app/register.html'
-    form_class = CoreUserAddForm
-    success_url = reverse_lazy('login')
-    redirect_authenticated_user = True
-
-class CoreLandingView(TemplateView):
-    template_name = 'app/landing.html'
-
-
-
-class UserAddTaskView(CreateView, LoginRequiredMixin):
+class UserTaskAddView(CreateView, LoginRequiredMixin):
     template_name = 'app/post.html'
     form_class = UserTaskAddForm
-    success_url = reverse_lazy('inbox')
+
+    def get_success_url(self):
+        return self.request.POST.get('next')
 
     def form_valid(self, form):
         form.instance.created_by = self.request.user
         return super().form_valid(form)
 
-class UserAddProjectView(CreateView, LoginRequiredMixin):
+class UserTaskCompleteToggleView(UpdateView, LoginRequiredMixin):
+    template_name = "app/blank.html"
+    model = Task
+    form_class = UserTaskCompletedForm
+
+    def form_valid(self, form):
+        '''
+        Toggles the completed date between None and timezone.now()
+        '''
+        form_complete = self.model.objects.get(pk=form.instance.pk)
+        if not form_complete.completed:
+            form.instance.completed_date = timezone.now()
+        else:
+            form.instance.completed_date = None
+        return super().form_valid(form)
+
+    def get_success_url(self) -> str:
+        return self.request.POST.get('next')
+
+class UserProjectAddView(CreateView, LoginRequiredMixin):
     ''' 
     User view for creating a new project
     '''
@@ -51,7 +53,7 @@ class UserAddProjectView(CreateView, LoginRequiredMixin):
         Sets the value of Project.created_by to the current user
         '''
         form.instance.created_by = self.request.user
-        return super(UserAddProjectView, self).form_valid(form)
+        return super(UserProjectAddView, self).form_valid(form)
     
     def get_success_url(self):
         '''
@@ -92,14 +94,26 @@ class UserAddSectionView(CreateView, LoginRequiredMixin):
         form.instance.project = Project.objects.get(pk=self.kwargs['prj'])
         return super().form_valid(form)
 
-class UserTaskAddToSection(CreateView, LoginRequiredMixin):
+class UserTaskAddToSectionView(CreateView, LoginRequiredMixin):
     template_name = "app/blank.html"
     form_class = UserTaskAddForm
 
     def get_success_url(self):
-        return reverse('project', kwargs={'pk':self.kwargs['prj']})
+        return self.request.POST.get('next')
 
     def form_valid(self, form):
         form.instance.created_by = self.request.user
-        form.instance.section = Section.objects.get(pk=self.kwargs['sec'])
+        form.instance.section = Section.objects.get(pk=self.kwargs['pk'])
+        return super().form_valid(form)
+
+class UserTaskAddToProjectView(CreateView, LoginRequiredMixin):
+    template_name = "app/blank.html"
+    form_class = UserTaskAddForm
+
+    def get_success_url(self):
+        return self.request.POST.get('next')
+
+    def form_valid(self, form):
+        form.instance.created_by = self.request.user
+        form.instance.project = Project.objects.get(pk=self.kwargs['pk'])
         return super().form_valid(form)
