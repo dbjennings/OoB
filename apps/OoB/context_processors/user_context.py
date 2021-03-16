@@ -3,6 +3,7 @@ from ..forms import UserTaskAddForm, UserProjectAddForm
 
 def user_context(request):
     context = {}
+    
     if request.user.is_authenticated:
         context = {
             'projects': Project.objects.filter(user=request.user),
