@@ -2,15 +2,13 @@ from django.urls import reverse_lazy
 from django.contrib.auth.views import LoginView
 from django.views.generic import TemplateView, CreateView
 
-from .forms import CoreUserAddForm
+from .forms import CoreUserAddForm, OobAuthenticationForm
 
 class CoreLoginView(LoginView):
     template_name = 'core/login.html'
     success_url = 'home'
     redirect_authenticated_user = True
-    
-    class Meta:
-        pass
+    form_class = OobAuthenticationForm
 
 class CoreRegisterUserView(CreateView):
     template_name = 'core/register.html'
