@@ -132,7 +132,7 @@ STATIC_URL = '/static/'
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-STATIC_ROOT = str(ROOT_DIR.path('static'))
+STATIC_ROOT = str(ROOT_DIR.path('assets'))
 
 STATICFILES_DIRS = (
     str(ROOT_DIR.path('static').path('app')),
