@@ -1,119 +1,162 @@
 {% extends 'app/user_navbar.html' %}
 
+{% load static %}
+
+{% block css_content %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'user_project.css' %}">
+
+{% endblock css_content %}
+
 {% block content %}
 
-<div class="row">
-    <div class="col-sm-8 offset-sm-2">
-        <h3 class="text-center py-2">{{ project.project_name }}</h3>
-        <div class="accordion" id="accordionProject">
-
-            {# Project Tasks #}
-            <div class="card">
-                <div class="card-header" id="freeTasks">
-                    <h5 class="mb-0">
-                        <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseFreeTasks">
-                        PROJECT TASKS</button>
-                        <span class="float-right my-auto h6">{{ project.tasks_completed }}/{{ project.task_set.all|length }} Tasks Completed</span>
-                    </h5>
-                </div>
-                <div id="collapseFreeTasks" class="collapse show">
-                    <div class="card-body">
-                        <ul class="list-group">
-                        {% for task in project.task_set.all %}
-                        {% if task.completed is False %}
-                        <li class="list-group-item my-0 py-0">
-                            <form method="POST" action="{% url 'task_complete' task.id %}">
-                                {% csrf_token %}
-                                <input type="hidden" name="next" value="{{ request.path }}">
-                                <button type="submit" class="btn btn-outline-primary"><i class="far fa-check-circle"></i></button>
-                                {{ task }}
-                            </form>
-                        </li>
-                        {% endif %}
-                        {% endfor %}
-                        </ul>
-                        <div class="form-group">
-                            <form class="input-group" method="POST" action="{% url 'task_to_project' project.pk %}">
-                                {% csrf_token %}
-                                {{ task_form.task }}
-                                <input type="hidden" name="next" value="{{ request.path }}">
-                                <div class="input-group-append">
-                                    <button type = "submit" class="btn btn-outline-primary" type="submit" id="submitButton">Submit</button>
-                                </div>
-                            </form>
-                        </div>                        
+<!-- -->  
+  <div class="container-fluid">
+    <div class="row mt-5">
+      <div class="col-sm-8 offset-sm-2">
+        
+        <!-- Title for Project -->
+        <h1 class="display-4 text-center pb-3">{{ project.project }}</h1>
+        
+        <!-- Card for Project Tasks -->
+        <div class="card mb-3">
+          
+          <!-- Header for Project Tasks -->
+          <a role="button" class="card-header text-decoration-none" data-toggle="collapse" data-target="#taskList">
+              <span class="h6"><strong>Project Tasks</strong></span>
+            <span class="float-right">{{ project.tasks_completed }}/{{ project.task_set.all|length }} Tasks Complete</span>
+          </a>
+          
+          <!-- Collapsible body for Project Tasks -->
+          <ul class="list-group list-group-flush collapse show" id="taskList">
+            
+            {% for task in project.task_set.all %}
+            {% if task.completed is False %}
+            <li class="list-group-item d-flex align-items-center">
+              
+              <!-- Task Complete Checkmark -->
+              <form class="fa-lg pr-3 mb-0" method="POST" action="{% url 'edit_task' 'complete' task.pk %}">
+                {% csrf_token %}
+                <input type="hidden" name="next" value="{{ request.path }}">
+                <button type="submit" class="btn btn-link fa-layers fa-fw">
+                    <i class="far fa-circle oob-check-off"></i>
+                    <i class="far fa-check-circle oob-check-on"></i>
+                </button>
+              </form>
+              
+              <!-- Task Text -->
+              <div class="w-100">
+                <span>{{ task.task }}</span>
+              </div>
+              
+              <!-- Task Options -->
+              <div class="ml-auto">
+                <div class="btn-group-vertical">
+                  <div class="dropleft">
+                    <a role="button" class="btn text-muted" data-toggle="dropdown"><i class="fas fa-ellipsis-v"></i></a>
+                    <div class="dropdown-menu">
+                      <a class="dropdown-item disabled">Delete</a>
+                      <a class="dropdown-item disabled">Edit</a>
                     </div>
+                  </div>
                 </div>
-            </div>
-
-            {# Section Generator #}
-            {% for section in project.section_set.all %}
-            <div class="card">
-                <div class="card-header" id="sectionTasks{{ forloop.counter }}">
-                    <h5 class="mb-0">
-                        <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseSection{{ forloop.counter }}">
-                        {{ section.section|upper }}</button>
-                        <span class="float-right my-auto h6">{{ section.tasks_completed }}/{{ section.task_set.all|length }} Tasks Completed</span>
-                    </h5>
-                </div>
-                <div id="collapseSection{{ forloop.counter }}" class="collapse">
-                    <div class="card-body">
-                        {% for task in section.task_set.all %}
-                        {% if task.completed is False %}
-                        <li class="list-group-item">
-                            <form method="POST" action="{% url 'task_complete' task.id %}">
-                                {% csrf_token %}
-                                <input type="hidden" name="next" value="{{ request.path }}">
-                                <button type="submit" class="btn btn-outline-primary"><i class="far fa-check-circle"></i></button>
-                                {{ task }}
-                            </form>
-                        </li>
-                        {% endif %}
-                        {% endfor %}
-
-                        <div class="form-group">
-                            <form class="input-group mb-3" method="POST" action="{% url 'task_to_section' section.pk %}">
-                                {% csrf_token %}
-                                {{ task_form.task }}
-                                <input type="hidden" name="next" value="{{ request.path }}">
-                                <div class="input-group-append">
-                                    <button type = "submit" class="btn btn-outline-primary" type="submit" id="submitButton">Submit</button>
-                                </div>
-                            </form>
-                        </div>
-                    </ul>                        
-                    </div>
-                </div>
-            </div>
+              </div>            
+            </li>
+            {% endif %}
             {% endfor %}
 
-            {# Create a new Section #}
-            <div class="card">
-                <div class="card-header" id="createSection">
-                    <h2 class="mb-0 btn-group-lg">
-                        <button type="button" class="btn btn-link" data-toggle="collapse" data-target="#collapseNewSection">
-                        NEW SECTION</button>
-                    </h2>
-                </div>
-                <div class="collapse" id="collapseNewSection">
-                    <div class="card-body">
-                        <div class="form-group">
-                            <form class="input-group mb-3" method="POST" action="{% url 'create_section' project.pk %}">
-                                {% csrf_token %}
-                                {{ section_form.section }}
-                                <input type="hidden" name="next" value="{{ request.path }}">
-                                <div class="input-group-append">
-                                    <button type = "submit" class="btn btn-outline-primary" type="submit" id="submitButton">Submit</button>
-                                </div>
-                            </form>
-                        </div>            
+            <!-- New Task Creation - Project Tasks -->
+            <li class="list-group-item d-flex align-items-center">
+                <form class="input-group" method="POST" action="{% url 'add_task' 'project' project.pk %}">
+                    {% csrf_token %}
+                    {{add_task_form.task}}
+                    <input type="hidden" name="next" value="{{ request.path }}">
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary" type="submit" id="button-addon2">Add</button>
                     </div>
-                </div>
-            </div>
-
-
+                </form>
+            </li>
+          </ul>
         </div>
+        
+
+        {% for section in project.section_set.all %}
+        <!-- Card for Section Tasks -->
+        <div class="card mb-3">
+          
+          <!-- Header for Section Tasks -->
+          <a role="button" class="card-header" data-toggle="collapse" data-target="#sectionList{{ forloop.counter }}">
+              <span class="h6"><strong>{{ section.section }}</strong></span>
+              <span class="float-right">{{ section.tasks_completed }}/{{ section.task_set.all|length }} Tasks Complete</span>
+          </a>
+          
+          <!-- Collapsible body for Section Tasks -->
+          <ul class="list-group list-group-flush collapse" id="sectionList{{ forloop.counter }}">
+
+            {% for task in section.task_set.all %}
+            {% if task.completed is False %}
+            <li class="list-group-item d-flex align-items-center">
+              
+              <!-- Task Complete Checkmark -->
+              <form class="fa-lg pr-3 mb-0" method="POST" action="{% url 'edit_task' 'complete' task.pk %}">
+                {% csrf_token %}
+                <input type="hidden" name="next" value="{{ request.path }}">
+                <button type="submit" class="btn btn-link fa-layers fa-fw">
+                    <i class="far fa-circle oob-check-off"></i>
+                    <i class="far fa-check-circle oob-check-on"></i>
+                </button>
+              </form>        
+              
+              <!-- Task Text -->
+              <div class="w-100">
+                <span class=>{{ task.task }}</span>
+              </div>
+              
+              <!-- Task Options -->
+              <div class="ml-auto">
+                <div class="btn-group-vertical">
+                  <div class="dropleft">
+                    <a role="button" class="btn text-muted" data-toggle="dropdown"><i class="fas fa-ellipsis-v"></i></a>
+                    <div class="dropdown-menu">
+                      <a class="dropdown-item">Delete</a>
+                      <a class="dropdown-item">Edit</a>
+                    </div>
+                  </div>
+                </div>
+              </div>            
+            </li>
+            {% endif %}
+            {% endfor %}
+            
+            <!-- New Task Creation - Section Tasks -->
+            <li class="list-group-item d-flex align-items-center">
+                <form class="input-group" method="POST" action="{% url 'add_task' 'section' section.pk %}">
+                    {% csrf_token %}
+                    {{add_task_form.task}}
+                    <input type="hidden" name="next" value="{{ request.path }}">
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary" type="submit" id="button-addon2">Add</button>
+                    </div>
+                </form>
+            </li>
+          </ul>
+        </div>
+        {% endfor %}
+        
+        <!-- Create New Section in this Project -->
+        <div class="form-group">
+          <form class="input-group" method="POST" action="{% url 'add_section' project.pk %}">
+            {% csrf_token %}
+            {{ section_form.section }}
+            <input type="hidden" name="next" value="{{ request.path }}">
+            <div class="input-group-append">
+                <button class="btn btn-outline-secondary" type="button" id="button-addon2">Add</button>
+            </div>
+          </form>
+        </div>
+        
+      </div>
     </div>
-</div>
+  </div>
 
 {% endblock content %}

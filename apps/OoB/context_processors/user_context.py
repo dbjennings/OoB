@@ -7,7 +7,7 @@ def user_context(request):
         context = {
             'projects': Project.objects.filter(user=request.user),
             'inbox_count': Task.objects.filter(user=request.user, project=None, section=None, completed_date=None).count(),
-            'quick_task_form': UserTaskAddForm(),
+            'add_task_form': UserTaskAddForm(),
             'project_form': UserProjectAddForm(),
         }
     return context
