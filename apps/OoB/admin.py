@@ -17,9 +17,9 @@ class TaskAdmin(admin.ModelAdmin):
     model = Task
     add_form = AdminTaskAddForm
     form = AdminTaskChangeForm
-    list_display = ('task','section','project','completed','user','created_date',)
+    list_display = ('task','project','completed','user','created_date',)
     fieldsets = (
-        (None, {'fields': ('task','project','section')}),
+        (None, {'fields': ('task','project')}),
         ('Scheduling', {'fields': ('scheduled_date','completed_date')}),
         ('Generation/Modification', {'classes':('wide',),'fields':('user',)}),
         )
@@ -30,10 +30,4 @@ class ProjectAdmin(admin.ModelAdmin):
     model = Project
     add_form = AdminProjectAddForm
     form = AdminProjectChangeForm
-    list_display = ('project','user','created_date',)
-
-@admin.register(Section)
-class SectionAdmin(admin.ModelAdmin):
-    model = Section
-    add_form = AdminAddSectionForm
-    list_display = ('section','user','created_date')
+    list_display = ('name','user','created_date',)

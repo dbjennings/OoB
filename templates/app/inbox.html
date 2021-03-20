@@ -59,7 +59,7 @@
 
             <!-- New Task Creation - Project Tasks -->
             <li class="list-group-item d-flex align-items-center">
-                <form class="input-group" method="POST" action="{% url 'add_task' 'self' 0 %}">
+                <form class="input-group" method="POST" action="{% url 'add_task' 0 %}">
                     {% csrf_token %}
                     {{add_task_form.task}}
                     <input type="hidden" name="next" value="{{ request.path }}">

@@ -72,8 +72,6 @@ pytestdebug.log
 # Translations
 *.mo
 
-# Django stuff:
-migrations/
 
 # Flask stuff:
 instance/

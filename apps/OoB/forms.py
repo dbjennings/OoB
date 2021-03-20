@@ -1,8 +1,6 @@
 from django import forms
-from django.forms import fields
 
-from .models import Project, Section, Task, Tag
-
+from .models import Project, Task, Tag
 
 class AdminTaskAddForm(forms.ModelForm):
     task = forms.CharField(max_length=200, 
@@ -37,14 +35,6 @@ class AdminProjectChangeForm(forms.ModelForm):
         model = Project
         fields = '__all__'
 
-class AdminAddSectionForm(forms.ModelForm):
-
-    class Meta:
-        model = Section
-        fields = ('section','project','user',)
-
-
-
 class UserTaskAddForm(forms.ModelForm):
     task = forms.CharField(max_length=200, 
                            widget=forms.TextInput(
@@ -62,21 +52,12 @@ class UserTaskCompletedForm(forms.ModelForm):
         fields = ('completed_date',)
 
 class UserProjectAddForm(forms.ModelForm):
-    project = forms.CharField(max_length=100, 
+    name = forms.CharField(max_length=100, 
                                    widget=forms.TextInput(
                                    attrs={'class': 'form-control',
                                           'placeholder': 'Your Project Name',}))
 
     class Meta:
         model = Project
-        fields = ('project',)
+        fields = ('name',)
 
-class UserAddSectionForm(forms.ModelForm):
-    section = forms.CharField(max_length=100, 
-                                   widget=forms.TextInput(
-                                   attrs={'class': 'form-control',
-                                          'placeholder': 'Section Name',}))
-
-    class Meta:
-        model = Section
-        fields = ('section',)

@@ -27,7 +27,7 @@
             {# Load User Project options #}
             {% for project in projects %}
               <a class="dropdown-item" href="{% url 'project' project.id %}">
-                {{ project.project|truncatechars:20 }}</a>
+                {{ project.name|truncatechars:20 }}</a>
             {% endfor %}
               <div class="dropdown-divider"></div>
               {# Modal menu for creating a new project #}
@@ -55,7 +55,7 @@
           <li class="dropdown">
             <button type="button" class="btn btn-primary mx-4 py-auto" data-toggle="dropdown" role="button"><i class="fas fa-plus fa-2x"></i></button>
             <ul class="dropdown-menu dropdown-menu-right rounded-0" style="width: 40vw;">
-              <form class="px-4 py-1" method="POST" action="{% url 'add_task' 'self' 0 %}">
+              <form class="px-4 py-1" method="POST" action="{% url 'add_task' 0 %}">
                 {% csrf_token %}
                 <div class="form-group">
                   {{ add_task_form.task }}
@@ -101,9 +101,9 @@
         <form method="POST" action="{% url 'add_project' %}">
         {% csrf_token %}
           <div class="modal-body w-100">
-            <label for="{{ project_form.project.id_for_label }}">
-              {{ project_form.project.label_tag|title }}</label>
-            {{ project_form.project }}
+            <label for="{{ project_form.name.id_for_label }}">
+              {{ project_form.name.label_tag|title }}</label>
+            {{ project_form.name }}
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>

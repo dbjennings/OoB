@@ -2,11 +2,7 @@
 
 {% load static %}
 
-{% block css_content %}
-
-<link rel="stylesheet" type="text/css" href="{% static 'user_project.css' %}">
-
-{% endblock css_content %}
+{% block css_content %}<link rel="stylesheet" type="text/css" href="{% static 'user_project.css' %}">{% endblock css_content %}
 
 {% block content %}
 
@@ -16,7 +12,7 @@
       <div class="col-sm-8 offset-sm-2">
         
         <!-- Title for Project -->
-        <h1 class="display-4 text-center pb-3">{{ project.project }}</h1>
+        <h1 class="display-4 text-center pb-3">{{ project.name }}</h1>
         
         <!-- Card for Project Tasks -->
         <div class="card mb-3">
@@ -67,7 +63,7 @@
 
             <!-- New Task Creation - Project Tasks -->
             <li class="list-group-item d-flex align-items-center">
-                <form class="input-group" method="POST" action="{% url 'add_task' 'project' project.pk %}">
+                <form class="input-group" method="POST" action="{% url 'add_task' project.pk %}">
                     {% csrf_token %}
                     {{add_task_form.task}}
                     <input type="hidden" name="next" value="{{ request.path }}">
@@ -80,20 +76,20 @@
         </div>
         
 
-        {% for section in project.section_set.all %}
+        {% for sub in project.children.all %}
         <!-- Card for Section Tasks -->
         <div class="card mb-3">
           
           <!-- Header for Section Tasks -->
           <a role="button" class="card-header" data-toggle="collapse" data-target="#sectionList{{ forloop.counter }}">
-              <span class="h6"><strong>{{ section.section }}</strong></span>
-              <span class="float-right">{{ section.tasks_completed }}/{{ section.task_set.all|length }} Tasks Complete</span>
+              <span class="h6"><strong>{{ sub.name }}</strong></span>
+              <span class="float-right">{{ sub.tasks_completed }}/{{ sub.task_set.all|length }} Tasks Complete</span>
           </a>
           
           <!-- Collapsible body for Section Tasks -->
           <ul class="list-group list-group-flush collapse" id="sectionList{{ forloop.counter }}">
 
-            {% for task in section.task_set.all %}
+            {% for task in sub.task_set.all %}
             {% if task.completed is False %}
             <li class="list-group-item d-flex align-items-center">
               
@@ -130,7 +126,7 @@
             
             <!-- New Task Creation - Section Tasks -->
             <li class="list-group-item d-flex align-items-center">
-                <form class="input-group" method="POST" action="{% url 'add_task' 'section' section.pk %}">
+                <form class="input-group" method="POST" action="{% url 'add_task' sub.pk %}">
                     {% csrf_token %}
                     {{add_task_form.task}}
                     <input type="hidden" name="next" value="{{ request.path }}">
@@ -143,14 +139,15 @@
         </div>
         {% endfor %}
         
-        <!-- Create New Section in this Project -->
+        <!-- Create New Sub-Project in this Project -->
         <div class="form-group">
-          <form class="input-group" method="POST" action="{% url 'add_section' project.pk %}">
+          <form class="input-group" method="POST" action="{% url 'add_project' %}">
             {% csrf_token %}
-            {{ section_form.section }}
+            {{ sub_form.name }}
             <input type="hidden" name="next" value="{{ request.path }}">
+            <input type="hidden" name="parent_pk" value="{{ project.pk }}">
             <div class="input-group-append">
-                <button class="btn btn-outline-secondary" type="button" id="button-addon2">Add</button>
+                <button class="btn btn-outline-secondary" type="submit" id="button-addon2">Add</button>
             </div>
           </form>
         </div>
